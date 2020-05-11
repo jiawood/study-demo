@@ -1,0 +1,28 @@
+<script>
+  function searchLongestStr(str1,str2){
+    let n1 = str1.length
+    let n2 = str2.length
+    if(n1 < n2){
+      let tep = str1
+      str1 = str2
+      str2 = tep
+    }//str1是长字符串  str2是短  现在要找出短字符串的所有子串 然后看str1中有没有
+    let res = n2 - 1
+    let subStr = ''
+    while(res >= 0){
+      for(let i = 0;i < n2; i++){
+        for(let j=i+res;j < n2;j++){
+          subStr = str2.slice(i,j+1)
+          if(str1.indexOf(subStr) > -1){
+            return res + 1
+          }
+        }
+      }
+      res--
+    }
+    return 0
+
+  }
+
+  //动态规划 求解
+</script>
