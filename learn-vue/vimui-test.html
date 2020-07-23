@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      span{
+        background-color: violet;
+        color: aqua;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="https://google.com" target="_blank">google</a>
+      <a href="https://twitter.com" target="_blank">twitter</a>
+    </div>
+    <script>
+
+      //e代表事件本身，e.target  事件的目标，也就是触发当前事件的节点
+      let aes
+      let listA = ["a","s","d","f"]
+      window.addEventListener('keydown', (e)=> {
+        if(e.key ==="g"){
+          //1.找到所有的a元素
+          // debugger
+          aes = document.querySelectorAll('a')
+          console.log(aes)
+          for(let i = 0; i < aes.length; i++){
+            let a = aes[i]
+            let aChild = document.createElement("span")
+            aChild.append(document.createTextNode(listA[i]))
+            a.append(aChild)
+          }
+        }
+      })
+
+      window.addEventListener("keypress",(e)=>{
+        let index = listA.indexOf(e.key)
+        if(listA.indexOf(e.key) > -1){
+          if(listA.indexOf(e.key) < listA.length){
+            open(aes[index].href)
+          }
+        }
+      })
+
+
+  </script>
+  </body>
+</html>

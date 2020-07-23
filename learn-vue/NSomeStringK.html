@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" name="" id="">
+
+  <script>
+    document.addEventListener("keydown",(e)=>{
+      if(e.key === "q" || e.key === "w" || e.key === "x"){
+        e.preventDefault()
+      }
+    })
+
+    let input = document.querySelector('input')
+    input.addEventListener('focus',(e)=>{
+      let value = e.target.value
+      let res = ''
+      for(let i = 0; i<value.length; i++){
+        if(value[i] == "q" || value[i] == "w" || value[i] == "x"){
+          res += '*'
+        }else{
+          res += value[i]
+
+        }
+      }
+      e.target.value = res
+    })
+  </script>
+</body>
+</html>

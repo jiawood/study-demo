@@ -1,0 +1,155 @@
+<script>
+  //创建一个优先队列（堆）
+class PriorityQueue {
+  constructor(initial = [],predicate = it => it){
+    this.predicate = predicate
+    this.elments = initial.slice()
+    this._heapfiy(0)
+  }
+  /**
+  * 查看堆顶元素
+  */
+  peak(){
+    return this.elments[0]
+  }
+  /**
+  * 往堆里增加一个元素
+  */
+  push(val){
+    this.elments.push(val)
+    let idx = this.elments.length - 1
+    this._heapUp(idx)
+    return this
+  }
+  // push(val){
+  //   this.elments.push(val)
+  //   let index = this.elments.length - 1
+  //   let parentIndex = (index - 1) / 2 | 0
+  //   while(parentIndex >= 0){
+  //     if(this.elments[parentIndex] < this.elments[index]){
+  //       this._swap(index,parentIndex)
+  //       parentIndex = (parentIndex - 1) / 2 | 0
+  //     }else{
+  //       break
+  //     }
+  //   }
+  // }
+  /**
+  *删除并返回堆顶元素
+  */
+  pop(){
+    let res = this.elments[0]
+    this.elments[0] = this.elments.pop()
+    this._heapDown(0)
+    return res
+  }
+  /**
+  * 交换两个元素
+  */
+  _swap(i,j){
+    if(i != j){
+      let tep = this.elments[i]
+      this.elments[i] = this.elments[j]
+      this.elments[j] = tep
+    }
+  }
+  /**
+  * 将插入的元素的节点提前，然后交换两个元素
+  */
+  _heapUp(idx){
+    if(idx > 0){
+      let pIdx = (idx - 1) / 2 | 0
+      if(this.predicate(this.elments[pIdx]) < this.predicate(this.elments[idx])){
+        this._swap(idx,pIdx)
+        this._heapUp(pIdx)
+      }
+    }
+  }
+  /**
+  *将元素往后移，这是将堆顶的元素删除之后，将末尾的元素放入堆顶
+  *这时候要移动这个节点
+  */
+  _heapDown(idx){
+    if(idx < this.elments.length){
+      let lIdx = 2 * idx + 1
+      let rIdx = 2 * idx + 2
+      if(this.predicate(this.elments[lIdx]) >= this.predicate(this.elments[rIdx]) && this.predicate(this.elments[lIdx]) > this.predicate(this.elments[idx])){
+        this._swap(idx,lIdx)
+        this._heapDown(lIdx)
+      }
+      if(this.predicate(this.elments[lIdx]) < this.predicate(this.elments[rIdx]) && this.predicate(this.elments[rIdx]) > this.predicate(this.elments[idx])){
+        this._swap(idx,rIdx)
+        this._heapDown(rIdx)
+      }
+    }
+  }
+  /**
+  * 将一个普通的数组转化为堆,只能从后往前，因为堆顶的值是最大的
+  如果刚开始就弄第一个的话，第一个的值只是前三个值的最大值
+  */
+  _heapfiy(idx = 0){
+    let startIndex = (this.elments.length - 1) / 2 | 0
+    for(let i = startIndex; i>=0;i--){
+      this._heapDown(i)
+    }
+
+  }
+}
+function test(){
+  let random = new Array(100).fill(0)
+  random = random.map(it => Math.random() * 100 | 0)
+  let p = new PriorityQueue()
+  random.forEach(it => p.push(it))
+  let ary = new Array(100)
+  for(let i = 0; i< ary.length;i++){
+    ary[i] = p.pop()
+  }
+  return ary
+}
+
+function heapDown(ary,idx,end = ary.length - 1){
+  let maxIdx = idx
+  let leftIdx = idx * 2 + 1
+  let rightIdx = idx * 2 + 2
+  if(leftIdx <= end){
+    if(ary[leftIdx] > ary[maxIdx]){
+      maxIdx = leftIdx
+    }
+  }
+  if(rightIdx <= end){
+    if(ary[rightIdx] > ary[maxIdx]){
+      maxIdx = rightIdx
+    }
+  }
+  if(maxIdx !== idx){
+    swap(ary,idx,maxIdx)
+    heapDown(ary,maxIdx,end)
+  }
+}
+
+function swap(ary,i,j){
+  if(i != j){
+    let tep = ary[i]
+    ary[i] = ary[j]
+    ary[j] = tep
+  }
+}
+
+function heapify(ary){
+  let start = (ary.length - 2) / 2 | 0
+  for(let i = start;i>=0;i--){
+    heapDown(ary,i)
+  }
+  return ary
+}
+
+function heapSort(ary){
+  heapify(ary) //n*log(n)
+  for(let i = ary.length - 1; i > 0;i--){
+    swap(ary,0,i)
+    heapDown(ary,0,i-1)
+  }
+  return ary
+}
+
+</script>

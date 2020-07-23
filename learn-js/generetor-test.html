@@ -1,0 +1,129 @@
+<script>
+  function * foo(){
+    var aa = yield 2
+    console.log(`aa:${aa}`)
+    var bb = yield 3
+    console.log(`bb:${bb}`)
+  }
+  var a = foo()
+
+  function * foo () {
+    var a = yield * g()
+    console.log(a)
+    yield 2
+  }
+  function * g() {
+    yield "a"
+    yield "b"
+    return 88
+  }
+
+  a = g()
+
+  for(let i of a){
+    console.log(a)
+  }
+
+
+  function forof(generator, action){
+    let generated = generator.next()
+    while(generated.done === false){
+      action(generated.value)
+      generated = generator.next()
+    }
+  }
+
+  function * shit(){
+    yield 1
+    yield 2
+  }
+  var a = shit()
+  forof(a,(i) => {console.log(i)})
+
+
+//模拟range的实现
+function * range (start,end){
+  for(let i = start; i < end; i++){
+    yield i
+  }
+}
+[...range(0,3)]
+
+
+//只要对象里面有 Symbol.itetator 这个属性， 然后值 等于一个生成器  yield 1； yield 2; yield 3 等之类的，这个对象就可以被迭代
+
+let objIterator = {}
+objIterator[Symbol.iterator] = function * gen(){
+  yield 1
+  yield 2
+  yield "hello"
+}
+for(let i of objIterator){
+  console.log(i)
+}
+
+
+Number.prototype[Symbol.iterator] = function *(){
+  debugger
+  let n = this
+  for(let i = 0; i < n; i++){
+
+    yield i
+  }
+}
+
+//要写一个函数，使for of 支持 生成 0-9
+//多态
+for(let i of 9){
+  console.log(i)
+}
+
+
+// 将10086生成 6 8 0 0 1
+Number.prototype[Symbol.iterator] = function *(){
+  let num = this
+  while(num > 0){
+    let n = num % 10
+    num = num / 10 | 0
+    yield n
+  }
+}
+for(let i of 10086){
+  console.log(i)
+}
+
+//使用next
+Number.prototype[Symbol.iterator] = function (){
+  let i = 0
+  let n = this
+  return {
+    next: function () {
+      return {
+        value: i++,
+        done: i > n,
+      }
+    }
+  }
+}
+for(let i of 10){
+  console.log(i)
+}
+
+function func(a= {}){
+  console.log(a)
+}
+func()
+
+Function.prototype.a = () => alert("a")
+Object.prototype.b = () => alert("b")
+function A() {}
+let a = new A()
+
+a.a()
+
+let foo = {}
+let F = function(){}
+Object.prototype.a = "value a"
+Function.prototype.b = "value b"
+
+</script>

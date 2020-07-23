@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button></button>
+  <div class="img">
+
+  </div>
+
+  <script>
+    let button = document.querySelector('button')
+    let imgs = document.querySelector('.img')
+    button.addEventListener('click',(e) => {
+      let xhr = new XMLHttpRequest()
+      xhr.open('GET','https://xieranmaya.github.io/images/cats/cats.json')
+      xhr.send()
+      xhr.addEventListener('load',(e) => {
+        let cats = JSON.parse( xhr.responseText)
+        for(let i = 0; i < cats.length; i++){
+        let node = document.createElement('img')
+        node.setAttribute("src",`https://xieranmaya.github.io/images/cats/${cats[i].url}`)
+        node.onload = ((e)=>{
+          imgs.append(node)
+
+        })
+      }
+      })
+
+    })
+  </script>
+</body>
+</html>
+
+

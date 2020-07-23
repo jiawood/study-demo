@@ -1,0 +1,120 @@
+<script>
+  //paesejson 是一个闭包
+  let ParseJSON = (function(){
+    var str
+    var i
+    function parseValue() {
+      if (str[i] === '[') {
+        return parseArray()
+      }
+      if (str[i] === '{') {
+        return parseObject()
+      }
+      if(str[i] === '"'){
+        return parseString()
+      }
+      if(str[i] === 't'){
+        return parseTrue()
+      }
+      if(str[i] === 'f'){
+        return parseFalse()
+      }
+      if(str[i] === 'n'){
+        return parseNull()
+      }
+      return parseNumber()
+    }
+
+    function parseArray(){
+      let res = []
+      i++ //skip [
+      while(str[i] != ']'){
+        let val = parseValue()
+        res.push(val)
+        if(str[i] === ","){
+        i++  //skip ,
+      }
+      }
+
+      i++ //skip ]
+      return res
+    }
+
+    function parseObject(){
+      let res = {}
+      i++ //skip'{'
+      while(str[i] !== '}'){
+        let key = parseString()
+        i++  //skip :
+        let val = parseValue()
+        res[key] = val
+        if(str[i] === ","){
+        i++  //skip ,
+      }
+      }
+      i++
+      return res
+    }
+
+    //parseString 将字符串元素解析  "ksdgj"
+    function parseString(){
+      let res = ''
+      i++
+      while(str[i] != '"'){
+        res += str[i++]
+      }
+      i++ //skip '"'
+      return res
+    }
+
+    //parseNumber 将数字转化  '2344'
+    function parseNumber() {
+      let num = ''
+      while(isDight(str[i])){
+        num += str[i++]
+      }
+      return Number(num)
+    }
+
+    function isDight(c){
+      let char0 = '0'.charCodeAt(0)
+      let char9 = '9'.charCodeAt(0)
+      return c.charCodeAt(0) >= char0 && c.charCodeAt(0) <= char9
+    }
+
+    //parseTrue 将true 转化为true
+    function parseTrue() {
+      i += 4
+      return true
+    }
+
+    function parseFalse() {
+      i += 5
+      return false
+    }
+
+    function parseNull() {
+      i += 4
+      return null
+    }
+
+    return function ParseJSON(input){
+        var str = input
+        var i = 0
+      return parseValue()
+    }
+  })()
+
+  function test(){
+    var a = 0
+    var b = 1
+    return function fuck() {
+      console.log(a)
+    }
+  }
+
+  function test1(){
+    var cc = 1
+  }
+
+</script>

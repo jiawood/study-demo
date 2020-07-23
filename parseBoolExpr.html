@@ -1,0 +1,148 @@
+<script>
+  var i = 0
+  var expr = '|(&(t,f,t),!(t))'
+
+  var parseBoolExpr = function(expression){
+    expr = expression
+    i = 0
+    let syntaxTree = parseExpr()
+    return runTree(syntaxTree)
+  }
+
+  function runTree(root) {
+    if (root.type == 'fcall') {
+      switch(root.name) {
+        case '&':
+          var and = (...args) => args.reduce((a,b) => a && b)
+          return and(...root.params.map(runTree))
+        case '|':
+          var or = (...args) => args.reduce((a,b) => a || b)
+          return or(...root.params.map(runTree))
+        case '!':
+          return !runTree(root.params[0])
+      }
+    } else if (root.type == 'value') {
+      return root.value
+    }
+  }
+
+  function parseExpr() {
+    if (expr[i] == '|') {
+      return parseOr()
+    }
+    if (expr[i] == '&') {
+      return parseAnd()
+    }
+    if (expr[i] == '!') {
+      return parseNot()
+    }
+    if (expr[i] == 't') {
+      return parseTrue()
+    }
+    if (expr[i] == 'f') {
+      return parseFalse()
+    }
+  }
+
+  function parseTrue() {
+    i++
+    return {
+      type: 'value',
+      name: 't',
+      value: true
+    }
+  }
+  function parseFalse() {
+    i++
+    return {
+      type: 'value',
+      name: 'f',
+      value: false
+    }
+  }
+
+  function parseOr() {
+    var node = {
+      type: 'fcall',
+      name: '|',
+      params: [],
+    }
+    // |(a,b,c)
+    i += 2
+
+    while(true) {
+      node.params.push(parseExpr())
+      if (expr[i] === ')') {
+        break
+      } else {
+        i++//skip ,
+      }
+    }
+    i++//skip )
+
+    return node
+  }
+
+  function parseAnd() {
+    var node = {
+      type: 'fcall',
+      name: '&',
+      params: [],
+    }
+    // &(a,b,c)
+    i += 2
+
+    while(true) {
+      node.params.push(parseExpr())
+      if (expr[i] === ')') {
+        break
+      } else {
+        i++//skip ,
+      }
+    }
+    i++//skip )
+
+    return node
+
+  }
+  function parseNot() {
+    var node = {
+      type: 'fcall',
+      name: '!',
+      params: [],
+    }
+    // |(a,b,c)
+    i += 2
+
+    while(true) {
+      node.params.push(parseExpr())
+      if (expr[i] === ')') {
+        break
+      } else {
+        i++//skip ,
+      }
+    }
+    i++//skip )
+
+    return node
+  }
+
+
+  String.prototype.replaceAll = (wildcard,target) => {
+    let reg = new RegExp(wildcard,"g")
+    if(typeof target === "string"){
+        let  res = this.replace(reg,target)
+        return res
+    }else{
+      let res = ""
+      while(match = reg.exec(this)){
+        let str = match[0]
+        let rep = target(str)
+        res += this.slice(0,match.index)
+        res += rep
+      }
+      res += this.slice(reg.lastIndex)
+      return res
+    }
+}
+</script>

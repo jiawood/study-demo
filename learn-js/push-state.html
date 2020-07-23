@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="main">
+    首页
+  </div>
+  <a href="/about">about</a>
+  <a href="/links">links</a>
+
+  <script>
+    let pages = {
+      '/about': '关于我们网站：xxx；电话：1234567',
+      '/links': 'https://www.jd.com/   https://www.mi.com/',
+      '/': '首页'
+    }
+    let main = document.querySelector('#main')
+
+    document.addEventListener('click', (e) => {
+      if(e.target.matches('a')){
+        e.preventDefault()
+        let path = e.target.getAttribute('href')
+        history.pushState(path, '',path)
+        main.innerHTML = pages[path]
+      }
+    })
+
+    window.addEventListener('popstate', e => {
+      console.log(e)
+      if(e.state == null){
+        main.innerHTML = pages['/']
+      }else{
+        main.innerHTML = pages[e.state]
+      }
+    })
+  </script>
+</body>
+</html>

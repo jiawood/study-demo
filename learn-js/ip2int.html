@@ -1,0 +1,10 @@
+<script>
+  function ip2int(ip){
+    return parseInt(ip.split(".").map(Number).map(it => it.toString(2)).map(it => it.padStart(8,"0")).join(""),2)
+  }
+
+  //位运算的版本
+  function ip2int(ip){
+    return ip.split(".").reduce((res,num,i) => {res = res  | num << (3-i) * 8;return res },0)
+  }
+</script>

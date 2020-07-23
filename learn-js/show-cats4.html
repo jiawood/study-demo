@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //使用promise实现猫片的一张一张的加载
+    // let xhr = new XMLHttpRequest()
+    // xhr.open('GET','https://xieranmaya.github.io/images/cats/cats.json')
+    // xhr.onload = () => {
+
+    // }
+
+    //使用promise实现getImg函数
+
+    function getJson(url){
+      return new Promise((resolve,reject) => {
+        let xhr = new XMLHttpRequest()
+        xhr.open('GET',url)
+        xhr.onload = () => {
+          if(xhr.status < 400){
+            let cats = Array.from(JSON.parse(xhr.responseText))
+            resolve(cats)
+          }else{
+            reject('error')
+          }
+        }
+        xhr.onerror = () => {
+          reject('Network error')
+        }
+        xhr.send()
+
+      })
+    }
+
+    let cats
+    // debugger
+    // getJson('https://xieranmaya.github.io/images/cats/cats.json').then((value)=>{
+    //   cats = value
+
+    //   let sequence = Promise.resolve()
+    //   cats.reduce((sequence,cat)=>{
+    //     return sequence.then(() => {
+    //       return cat
+    //     }).then((cat)=>{
+    //       return getImg(cat)
+    //     }).then(
+    //       (img) => {
+    //         document.body.appendChild(img)
+    //       }
+    //     )
+    //   },sequence)
+    // })
+
+    // getJson('https://xieranmaya.github.io/images/cats/cats.json').then((value)=>{
+    //   cats = value
+
+    //   return Promise.all(cats.map((cat)=>{
+    //     return getImg(cat)
+    //   }))
+    // }).then((imgs) => {
+    //   imgs.forEach(img => {
+    //     document.body.appendChild(img)
+    //   })
+    // })
+
+    getJson('https://xieranmaya.github.io/images/cats/cats.json').then((value)=>{
+      cats = value
+
+      return cats.map((cat) =>{
+        return getImg(cat)
+      }).reduce((sequence,img)=>{
+      return sequence.then(() => {
+        return img
+      }).then((img) => {
+        document.body.appendChild(img)
+      })
+    },Promise.resolve())
+    })
+
+    function getImg(cat){
+          return new Promise((resolve) => {
+            let img = document.createElement('img')
+            img.src = cat.fullUrl
+            img.onload = ()=>{
+              resolve(img)
+            }
+          })
+        }
+
+    // getJson('https://xieranmaya.github.io/images/cats/cats.json').then((value)=>{
+    //   cats = value
+    //   getImg(cats[0]).then(img0 => {
+    //     document.body.appendChild(img0)
+    //     return getImg(cats[1])
+    //   })
+    //   .then(img1 => {
+    //     document.body.appendChild(img1)
+    //     return getImg(cats[2])
+    //   })
+    //   .then(img2 => {
+    //     document.body.appendChild(img2)
+    //     return getImg(cats[3])
+    //   })
+
+
+    //     function getImg(cat){
+    //       return new Promise((resolve) => {
+    //         let img = document.createElement('img')
+    //         img.src = cat.fullUrl
+    //         img.onload = ()=>{
+    //           resolve(img)
+    //         }
+    //       })
+    //     }
+    //   })
+
+
+
+
+
+
+
+
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<script>
+  function normalizeForm(form) {
+    let res = ''
+    for(let i = 0; i < form.elments.length; i++){
+      let el = form.elments[i]
+      if(el.name){
+        res += el.name + '=' + el.value
+        if(i < form.elments.length - 1){
+          res += '&'
+        }
+      }
+    }
+    return res
+  }
+</script>

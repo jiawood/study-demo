@@ -1,0 +1,25 @@
+<script>
+  function normalize(node){
+    if(node.nodeType === document.ELEMENT_NODE){
+      let childs = Array.from(node.childNodes)
+      let text = ""
+      for(let i = 0; i < childs.length; i++){
+        let child = childs[i]
+        if(child.nodeType === document.TEXT_NODE){
+          text += child.nodeValue
+          node.remove(child)
+        }else if(child.nodeType !== document.TEXT_NODE){
+          if(text){
+            let textNode = document.createTextNode(text)
+            node.insertBefore(textNode, child)
+            text = ''
+          }
+        }
+      }
+      if(text){
+        let textNode = document.createTextNode(text)
+        node.appendChild(textNode)
+      }
+    }
+  }
+</script>

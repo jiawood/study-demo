@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+let cats
+let xhr = new XMLHttpRequest()
+xhr.open('GET','https://xieranmaya.github.io/images/cats/cats.json')
+xhr.onload = () => {
+  // debugger;
+   cats = Array.from(JSON.parse(xhr.responseText))
+   let i = 0
+
+  foo()
+
+  function foo() {
+    // debugger;
+    get2Img(cats[i++].fullUrl,cats[i++].fullUrl,(img1,img2) => {
+    document.body.append(img1)
+    document.body.append(img2)
+    if(i < cats.length - 1){
+      foo ()
+      }
+    })
+  }
+}
+
+xhr.send()
+
+
+function getImg(url, cb) {
+  let img = document.createElement('img')
+  img.onload = function() {
+    cb(img)
+  }
+  img.src = url
+}
+
+
+// xhr.onload = function() {
+//   let cats = Array.from(JSON.parse(xhr.responseText))
+//   let i = 0
+
+//   function one(){
+//     getImg(cats[i++].fullUrl,(img)=>{
+//       document.body.appendChild(img)
+//       if(i < cats.length){
+//         one()
+//       }
+//     })
+//   }
+
+//   for(let i = 0; i < 3; i++){
+//     one()
+//   }
+// }
+
+
+
+
+function get2Img(url1, url2, cb){
+  let c = 0
+  let img1,img2
+  getImg(url1,img => {
+    img1 = img
+    c++
+    if(c == 2){
+      cb(img1,img2)
+    }
+  })
+  getImg(url2,img => {
+    img2 = img
+    c++
+    if(c == 2){
+      cb(img1, img2)
+    }
+  })
+}
+  </script>
+</body>
+</html>

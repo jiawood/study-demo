@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+
+  </div>
+
+  <script>
+    let div = document.querySelector('div')
+    let lasttime = new Date().getTime()
+    let time
+    document.addEventListener("mousemove",(e)=>{
+      time = new Date().getTime()
+      if(lasttime && time - lasttime > 18){
+        let node = document.createElement('div')
+        node.style.width = "50px"
+        node.style.height = "50px"
+        node.style.backgroundColor = "gold"
+        node.style.top = e.pageY - 25 + 'px'
+        node.style.left = e.pageX  - 25 + 'px'
+        node.style["border-radius"] = "50%"
+        node.setAttribute("class","child")
+        div.append(node)
+        setTimeout(()=>{
+          div.removeChild(node)
+        },200)
+        lasttime = time
+
+      }
+    })
+  </script>
+</body>
+</html>
+
+<style>
+  .container{
+    background-color: gray;
+    width: 500px;
+    height: 500px;
+    position: relative;
+  }
+  .child{
+    position: absolute;
+  }
+</style>

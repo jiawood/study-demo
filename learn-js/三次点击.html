@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let lastTime = 0
+    let detail = 1
+
+    window.addEventListener('click', e => {
+      let time = Date.now()
+
+      if(time - lastTime < 300){
+        detail++
+      }else{
+        detail = 1
+      }
+      if(detail == 3){
+        console.log("tripple click")
+      }
+
+      lastTime = time
+    })
+  </script>
+</body>
+</html>

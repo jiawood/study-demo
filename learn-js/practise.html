@@ -1,0 +1,256 @@
+<script>
+function Vector(x,y){
+  this.x = x
+  this.y = y
+}
+Vector.prototype = {
+  plus(v){
+  this.x = this.x + v.x
+  this.y = this.y + v.y
+  },
+  minus(v){
+  this.x = this.x - v.x
+  this.y = this.y - v.y
+  },
+  get length(){
+    return Math.sqrt(Math.pow(this.x,2) + Math.pow(this.y,2))
+  }
+}
+
+//实现复数
+function Complex(real,imag){
+  this.real = real
+  this.imag = imag
+
+}
+Complex.of =function of(str){
+
+    let res = str.match(/\d+/g)
+    real = Number(res[0])
+    imag = Number(res[1])
+    return new Complex(real,imag)
+  }
+Complex.prototype = {
+  plus(complex){
+    this.real = this.real + complex.real
+    this.imag = this.imag + complex.imag
+    return [this.real,this.imag]
+
+    // return `${this.real}+${this.imag}i`
+  },
+  minus(complex){
+    this.real = this.real - complex.real
+    this.imag = this.imag - complex.imag
+    return [this.real,this.imag]
+
+  },
+  multiple(complex){
+    if(complex instanceof Complex){
+      let r = this.real
+      let i = this.imag
+      this.real = r * complex.real - i * complex.imag
+      this.imag = r * complex.imag + i * complex.real
+      return [this.real,this.imag]
+    }else if(typeof complex === "number"){
+      return [this.real*complex,this.imag*complex]
+    }
+
+  },
+  division(complex){
+    let r = this.real
+    let i = this.imag
+    let divisionNumber = complex.real* complex.real + complex.imag* complex.imag
+    this.real = this.multiple(complex)[0] / divisionNumber
+    this.imag = this.multiple(complex)[1] /divisionNumber
+    return [this.real,this.imag]
+  },
+
+}
+
+
+function mySet(arr){
+  if(!arr){
+    this.mySet = []
+  }
+  this.mySet = []
+  let map = {}
+  arr.forEach((val)=>{
+    if(!map[val]){
+      this.mySet.push(val)
+      map[val] = 1
+    }
+  })
+  // return this.mySet
+}
+mySet.prototype = {
+  add(val){
+    if(this.mySet.indexOf(val) === -1){
+      this.mySet.push(val)
+    }
+    return this.mySet
+  },
+  delete(val){
+    if(this.mySet.indexOf(val) > -1){
+      this.mySet.pop(this.mySet.indexOf(val))
+      return true
+    }
+    return false
+  },
+  has(val){
+    if(this.mySet.indexOf(val) > -1){
+      return true
+    }
+    return false
+  },
+  clear(){
+    return []
+  }
+}
+
+function myMap(){
+  this.keys = []
+  this.myMap = []
+}
+
+myMap.prototype = {
+  set(k,v){
+    if(this.keys.indexOf(k) === -1){
+      this.keys.push(k)
+      this.myMap.push(([k,v]))
+    }else{
+      myMap = this.myMap
+      let index = this.keys.indexOf(k)
+      myMap[index] = [k,v]
+    }
+  },
+  get(k){
+    let index = this.keys.indexOf(k)
+    if(index === -1){
+      return
+    }
+    return this.myMap(this.myMap[index][1])
+  },
+  delete(k){
+    let index = this.keys.indexOf(k)
+    if(index === -1){
+      return false
+    }
+    this.keys.pop(index)
+    this.myMap.pop(index)
+    return true
+  },
+  has(k){
+    let index = this.keys.indexOf(k)
+    if(index === -1){
+      return false
+    }
+    return true
+  },
+  size(){
+    return this.keys.length
+  },
+  clear(){
+    this.keys = new Array()
+    this.myMap = new Array()
+  }
+}
+
+
+//实现intanceof  intanceof 是判断 一个构造函数是否在 这个实例的原型链上
+function instanceof1(obj,Cont){
+  while(obj){
+    if(obj.__proto__ == Cont.prototype){
+      return true
+    }
+    obj = obj.__proto__
+  }
+  return false
+}
+
+function instanceof2(obj,Cont){
+  if(!obj){
+    return false
+  }
+  if(obj.__proto__ == Cont.prototype){
+    return true
+  }
+  return instanceof2(obj.__proto__,Cont)
+}
+
+
+//实现NEW
+function NEW(Cont,...args){
+  let obj = Object.create(Cont.prototype)
+  let ret = Cont.call(obj,...args)
+  if(ret && typeof ret === "object"){
+    return ret
+  }else{
+    return obj
+  }
+}
+
+
+var Person = (function (){
+  let map = new Map()
+  function Person(name,age){
+    this.name = name
+    var privateFields = {}
+    privateFields.age = age
+    map.set(this,privateFields)
+  }
+  Person.prototype.getAge = function(){
+    let privateFields = map.get(this)
+    return privateFields.age - 2
+  }
+  return Person
+}())
+
+
+class TextCell {
+  static create(text){
+    return new TextCell(text)
+  }
+  constructor(text){
+    this.lines = text.split('\n')
+  }
+  get minWidth(){
+    return Math.max(...this.lines.map(it => it.length))
+  }
+  get minHeight(){
+    return this.lines.length
+  }
+  draw(width,height){
+    let result = []
+    for(let i = 0; i < height; i++){
+      let line = this.lines[i] || ""
+      result.push(line.padEnd(width," "))
+    }
+    return result
+  }
+
+}
+class UnderlinedTextCell extends TextCell{
+  constructor(text){
+    super(text)
+  }
+  get minHeight(){
+    return super.minHeight + 1
+  }
+  draw(width,height){
+    let result = super.draw(width,height-1)
+    result.push('-'.repeat(width))
+    return result
+  }
+}
+
+class Person{
+  #age = null
+  constructor(name,age){
+    this.name = name
+    this.#age = age
+  }
+  getAge(){
+    return this.#age - 2
+  }
+}
+</script>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text">
+  <p class="coords"></p>
+
+  <script>
+    let input = document.querySelector('input')
+    let id
+    input.addEventListener('keypress', function(e) {
+      clearTimeout(id)
+      id = setTimeout(() => {
+        showSuggestion(e)
+      }, 500)
+    })
+    function showSuggestion(e){
+      console.log("stoped")
+    }
+
+    let coords = document.querySelector('.coords')
+    let lastTime
+    // window.addEventListener("mousemove", (e)=>{
+    //   let now = Date.now()
+    //   if(now - lastTime > 200 || !lastTime){
+    //     showCoords(e)
+    //     lastTime = now
+    //   }
+    // })
+    let scheduled  = false
+    let lastEvent = null
+    window.addEventListener("mousemove", e => {
+      lastEvent = e
+      if(!scheduled){
+        scheduled = true
+        setTimeout(()=>{
+          showCoords(lastEvent)
+          scheduled = false
+
+        },250)
+      }
+    })
+
+    function showCoords(e) {
+      coords.textContent = e.pageX + ',' + e.pageY
+    }
+
+    // function throttle(f, time){
+    //   return function() {
+    //     let lastTime
+    //     if(!lastTime){
+    //       lastTime = Date.now()
+    //       return f
+    //     }else{
+    //       if(Date.now() - lastTime > time){
+    //         return f
+    //       }
+    //     }
+    //   }
+    // }
+
+    function throttle(f, time) {
+      let lastEvent = null
+      let scheduled = false
+      return function(e) {
+        lastEvent = e
+        if(!scheduled){
+          scheduled = true
+          setTimeout(()=>{
+            f.call(this,lastEvent)
+            scheduled = false
+          },time)
+        }
+      }
+    }
+
+
+    //只有在間隔時間大于500ms的时候才执行这个操作。
+    //debounce 是防抖  但是我觉得  下面的函数是节流，就是在时间间隔超过500ms的时候
+    //才取响应相应的操作
+    //而 防抖的意思是  当数据变化太快之后，数据显示不清楚，所以叫防抖，
+    // 防抖具体的实现是 事件 200ms 执行一次
+    function debounce(f,time) {
+      let id = null
+      return function(e) {
+        clearTimeout(id)
+        id = setTimeout(() => {
+          f.call(this, e)
+        },500)
+      }
+    }
+
+
+    window.addEventListener("mousemove", throttle((e) => {
+      coords.textContent = e.pageX + ',' + e.pageY
+    },250))
+  </script>
+</body>
+</html>

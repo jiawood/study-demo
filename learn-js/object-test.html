@@ -1,0 +1,57 @@
+<script>
+  function SuperType(){
+    this.colors = "shit"
+  }
+  function SubType(){
+  }
+  SubType.prototype = new SuperType()
+
+  var i1 = new SubType()
+  i1.colors = "fuck"
+  console.log(i1.colors)
+
+  var i2 = new SubType()
+  console.log(i2.colors)
+
+
+  function F(){
+    this.name = "x"
+    this.age = ["23","25"]
+  }
+  F.prototype.add = function(str){
+    this.age.push(str)
+  }
+const User = (() =>{
+  const wm = new WeakMap()
+
+  class User {
+    constructor(id){
+      this.idProperty = Symbol('id')
+      this.setId(id)
+    }
+
+    setPeivate(property, value){
+      const privateMenbers  = wm.get (this) || {}
+      privateMenbers[property] = value
+      wm.set(this, privateMenbers)
+    }
+    getPrivate(property){
+      return wm.get(this)[privateMenbers]
+    }
+    setId(id){
+      this.setPeivate(this.idProperty,id)
+    }
+    getId(){
+      return this.getPrivate(this.idProperty)
+    }
+  }
+  return User
+})()
+
+let dest = {
+  set id(x){
+    console.log(x)
+  }
+}
+Object.assign(dest,{id:"f"},{id:"x",she:"fff"})
+</script>

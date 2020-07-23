@@ -1,0 +1,29 @@
+<script>
+  // function reduce(arr,com,start){
+  //   let current = start
+  //   for(let i = 0;i < arr.length;i++){
+  //     current = com(current,arr[i])
+  //   }
+  //   return current
+  // }
+  // console.log(reduce([1,2,3],(a,b)=>{
+  //   return a+b
+  // },0))
+function flattenDepth(ary,depth=1){
+  if(depth == 0){
+    return ary.slice()
+  }
+  return ary.reduce((result,item) =>{
+
+    if(Object.prototype.toString.call(item) == '[object Array]' ){
+      result.push(...flattenDepth(item,depth-1))
+    }else{
+      result.push(item)
+    }
+    return result
+  },[])
+}
+
+
+
+</script>

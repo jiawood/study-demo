@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button>click it</button>
+  <div class="img">
+
+  </div>
+
+  <script>
+    let button = document.querySelector('button')
+    let imgs = document.querySelector('.img')
+    let cats
+    button.addEventListener('click',(e) => {
+      let xhr = new XMLHttpRequest()
+      xhr.open('GET','https://xieranmaya.github.io/images/cats/cats.json')
+      xhr.send()
+      // debugger;
+
+      xhr.addEventListener('load',(e) => {
+        cats = Array.from(JSON.parse( xhr.responseText))
+        //拿到所有猫图片的地址
+        // debugger;
+        function addImg(cats){
+          if(cats.length){
+            getImg(cats[0].url)
+            setTimeout( () => {addImg(cats.slice(1))}
+      )
+          }
+
+    }
+    // debugger
+    setTimeout(() => {addImg(cats)})
+
+    function getImg(url){
+      let img = document.createElement('img')
+      img.src = `https://xieranmaya.github.io/images/cats/${url}`
+
+      img.onload = function() {
+        imgs.append(img)
+      }
+    }
+      })
+
+    })
+
+
+
+
+  </script>
+</body>
+</html>
+
+<style>
+  button{
+    height: 50px;
+    width: 200px;
+  }
+</style>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="hello">hello</div>
+  <script>
+    //实现body的背景随着按键的点击切换
+    let changeColor = true
+    let body = document.querySelector('body')
+    body.addEventListener('keydown',(e) => {
+      if(changeColor && e.key === "q"){
+        body.style.backgroundColor = '#' + Math.random().toString().substr(2,3)
+        // console.log(e)
+        changeColor = false
+      }
+    })
+    body.addEventListener('keyup',(e) => {
+      body.style.backgroundColor = null
+      changeColor = true
+    } )
+    //实现一个自由移动的方块，并且用键盘控制其方向。
+    let div = document.querySelector('.hello')
+    let lasttime = null
+    let difftime = 0
+
+    let vy = 10
+    requestAnimationFrame(fu = function moveHello(time){
+      // debugger
+      if(lasttime != null){
+        if(difftime < 80  ){
+          difftime += (time - lasttime) * 0.001
+        }else{
+          difftime -= (time - lasttime) * 0.001
+        }
+
+      }
+      div.style.top = parseFloat(difftime) * vy + 'px'
+      lasttime = time
+      requestAnimationFrame(moveHello)
+    })
+    requestAnimationFrame(fu)
+    window.addEventListener('keydown',(e)=>{
+      switch(e.key) {
+        case 'ArrowDown':
+          vy = 20
+          break
+        case 'ArrowUp':
+          vy = -20
+          break
+      }
+
+    })
+
+    //dot  实现鼠标点击 产生 blue 点
+    // window.addEventListener('click', (e)=>{
+    //   // console.log(e)
+    //   let x = e.clientX
+    //   let y = e.clientY
+    //   // console.log(x)
+    //   // console.log(y)
+    //   // console.log(e.clientX)
+    //   let span = document.createElement('span')
+    //   span.style.left  = x - 5 + 'px'
+    //   span.style.top = y - 5 + 'px'
+    //   document.body.appendChild(span)
+    // })
+    let draw
+    window.addEventListener('mousedown',(e) => {
+      window.addEventListener('mousemove', draw = (e)=> {
+      let x = e.clientX
+      let y = e.clientY
+      // console.log(x)
+      // console.log(y)
+      // console.log(e.clientX)
+      let span = document.createElement('span')
+      span.style.left  = x - 5 + 'px'
+      span.style.top = y - 5 + 'px'
+      document.body.appendChild(span)
+    })
+    })
+
+    window.addEventListener('mouseup',(e)=>{
+      window.removeEventListener('mousemove',draw)
+    })
+
+
+  </script>
+  <style>
+    body{
+      background-color: #c33;
+      position: relative;
+    }
+    .hello{
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color:gold;
+    }
+    span{
+      width: 10px;
+      height: 10px;
+      background-color: blue;
+      border-radius: 100%;
+      position: absolute;
+    }
+  </style>
+</body>
+</html>

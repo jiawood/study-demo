@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="left-right-layout">
+    <div class="left"></div>
+    <div class="right"></div>
+  </div>
+  <ul id="test">
+    <li>这是第一条</li>
+    <li>这是第二条</li>
+    <li>这是第三条</li>
+  </ul>
+  <div class="switch">
+    <div class="switchItem"><span>1</span></div>
+    <div class="switchItem"><span>2</span></div>
+    <div class="switchItem"><span>3</span></div>
+  </div>
+  <script>
+    let items = document.querySelectorAll('.switchItem')
+    let i = 0
+    items[i].classList.add("active")
+    document.addEventListener('mousewheel',(e)=>{
+      // console.log(e)
+      if(e.wheelDelta === -150 && i < items.length - 1){
+        items[i].classList.remove("active")
+        console.log(i)
+
+          i++
+          items[i].classList.add("active")
+
+
+      }
+      if(e.wheelDelta === 150 && i > 0){
+        items[i].classList.remove("active")
+
+          i--
+          items[i].classList.add("active")
+
+
+      }
+    })
+
+
+    lis = document.querySelectorAll('li')
+    document.addEventListener('click',(e)=>{
+      if(e.target.matches('li')){
+        for(let i = 0; i < lis.length; i++){
+          if(e.target === lis[i]){
+            alert(i)
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>
+
+<style>
+.switchItem{
+  opacity: 0;
+}
+.active{
+  opacity: 1;
+
+}
+span {
+  /* display: inline-block; */
+  /* line-height: 100px;
+  height: 20px;
+  width: 20px; */
+  background-color: tan;
+  font: 15px;
+  /* text-align: center; */
+}
+.active span {
+  text-align: center;
+  animation: come-in 2s;
+}
+
+@keyframes come-in {
+  from {
+    opacity: 0;
+    font-size: 15px;
+    color: turquoise;
+    /* transform: translateX(0%) translateY(0%) */
+  }
+  50% {
+    opacity: 1;
+    /* transform: translateX(20%) translateY(20%) */
+    font-size: 40px;
+    color: yellowgreen;
+  }
+  to {
+    opacity: 1;
+    font-size: 15px;
+    color: forestgreen;
+    /* transform: translateX(100%) translateY(100%) */
+  }
+}
+
+.switch{
+  text-align: center;
+  /* vertical-align: middle; */
+
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  /* overflow: hidden; */
+  position: relative;
+  display: inline-block;
+}
+.switchItem{
+  width: 100px;
+  height: 100px;
+  background-color: pink;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.left-right-layout{
+  height: 400px;
+  width: 100vw;
+}
+.left{
+  float: left;
+  width: 200px;
+  height: 400px;
+  background-color: orangered;
+
+}
+.right{
+  float: right;
+  height: 400px;
+  width: calc(100% - 200px);
+  background-color: gold;
+}
+</style>
+
+
+<script>
+  function group(arr,n){
+    if(n <= 0){
+      return arr
+    }
+    let m = arr.length
+    if(n >= m){
+      return arr
+    }
+    let i = 0
+    let res = []
+    while(i < m){
+      res.push(arr.slice(i,i+n))
+      i += n
+    }
+    return res
+  }
+</script>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="parent1">
+      <div class="child1">i'm child</div>
+    </div>
+    <div class="parent2">
+      <div class="child2">i'm child</div>
+    </div>
+    <div class="parent3">
+      <div class="child3">i'm child</div>
+    </div>
+  </body>
+</html>
+
+<style>
+    .parent3{
+    height: 200px;
+    width: 200px;
+    background-color:rgba(22,00,34,0.3);
+    position: relative;
+  }
+  .child3{
+    height: 50px;
+    width: 50px;
+    background: rgba(255,00,00,0.6);
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  .parent2{
+    height: 200px;
+    width: 200px;
+    background-color:rgba(22,00,34,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .child2{
+    height: 50px;
+    width: 50px;
+    background: rgba(255,00,00,0.6);
+
+  }
+  .parent1{
+    height: 200px;
+    width: 200px;
+    background-color:rgba(22,00,34,0.3);
+    position: relative;
+  }
+  .child1{
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: rgba(255,00,00,0.6);
+    transform: translate(-50%,-50%);
+  }
+</style>

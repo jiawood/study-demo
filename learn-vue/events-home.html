@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .container{
+      position: relative;
+      width: 500px;
+      height: 500px;
+      display: inline-block;
+
+      background-color: gray;
+    }
+    .hello{
+      width: 80px;
+      height: 80px;
+      background-color: gold;
+      position: absolute;
+      top:50px;
+      left: 80px;
+      /* z-index: 1; */
+    }
+    .world{
+      width: 100px;
+      height: 100px;
+      background-color: violet;
+      position: absolute;
+      top:200px;
+      left:100px;
+      /* z-index: 1; */
+    }
+    /* .world:hover{
+      z-index: 10;
+    }
+    .hello:hover{
+      z-index: 10;
+    } */
+  </style>
+</head>
+<body>
+  <div style="background: orange;width: 60px;height: 20px;"></div>
+
+  <div class="container">
+    <div class="hello">hello</div>
+    <div class="world">world</div>
+  </div>
+
+  <script >
+    let hello = document.querySelector('.hello')
+    let world = document.querySelector('.world')
+    let container = document.querySelector('.container')
+    let maxZ = 0
+
+    let moveHello
+    hello.addEventListener('mousedown',(e)=>{
+      hello.addEventListener('mousemove',moveHello = (e)=>{
+        let x = e.pageX
+        let y = e.pageY
+        // console.log(e.pageX)
+        // console.log(e.pageY)
+        leftWidth = x - container.offsetLeft - 40
+
+        topWidth = y - container.offsetTop - 40
+        if(leftWidth > 420) leftWidth = 420
+        if(topWidth > 420) topWidth = 420
+        // hello.style["z-index"] = 10
+        hello.style.left = leftWidth + 'px'
+        hello.style.top = topWidth + 'px'
+        hello.style.zIndex = maxZ++
+      })
+    })
+
+    hello.addEventListener('mouseup',(e)=>{
+      hello.removeEventListener("mousemove",moveHello)
+    })
+
+    let moveWorld
+    world.addEventListener('mousedown',(e)=>{
+      world.addEventListener('mousemove',moveWorld = (e)=>{
+        let x = e.pageX
+        let y = e.pageY
+        // console.log(e.pageX)
+        // console.log(e.pageY)
+        leftWidth = x - container.offsetLeft - 50
+        topWidth = y - container.offsetTop - 50
+        // world.style["z-index"] = 10
+        world.style.left = leftWidth + 'px'
+        world.style.top = topWidth + 'px'
+        world.style.zIndex = maxZ++
+
+      })
+    })
+
+    world.addEventListener('mouseup',(e)=>{
+      world.removeEventListener("mousemove",moveWorld)
+    })
+
+    // world.addEventListener('mousedown', clickOne = (e)=>{
+    //   let lastTime = new Date().getTime()
+    //   world.addEventListener('click',(e)=>{
+    //     console.log("e")
+    //     // debugger
+    //     let time = new Date().getTime()
+    //     if(time - lastTime < 1000 ){
+    //       lastTime = time
+    //       world.addEventListener('click', (e)=>{
+    //         time = new Date().getTime()
+    //         console.log("ee")
+
+    //         if(time - lastTime < 1000){
+    //           world.addEventListener('click', (e)=>{
+    //             console.log("three click")
+    //           })
+    //         }
+    //       })
+    //     }
+    //   })
+    // })
+
+    // world.removeEventListener('mouseup',clickOne)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let lastX
+    let rect = document.querySelector('div')
+    rect.addEventListener('mousedown', (e)=> {
+      if(e.which == 1){
+        lastX = e.pageX
+        window.addEventListener('mousemove', moved)
+        event.preventDefault()
+      }
+    })
+    const moved = (e) => {
+      if(e.which != 1){
+        window.removeEventListener('mousemove', moved)
+      }else{
+        let dist = e.pageX - lastX
+        let newWidth = Math.max(10,rect.offsetWidth + dist)
+        console.log(rect.offsetWidth)
+        rect.style.width = newWidth + 'px'
+        lastX = event.pageX
+      }
+    }
+  </script>
+</body>
+</html>

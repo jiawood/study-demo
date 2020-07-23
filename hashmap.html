@@ -1,0 +1,122 @@
+<script>
+class HashMap {
+  constructor(loadFactor = 0.75) {
+    this._keys = Array(16)
+    this._values = Array(16)
+    this.count = 0
+    this.loadFactor = loadFactor
+  }
+
+  hash(key){
+    let  seed = 1313
+    let hash = 97
+    for(let i = 0; i < key.length; i++){
+      hash = (hash * seed + key.charCodeAt(i)) >>> 0  //转换为无符号整数以防止溢出
+
+    }
+
+    return hash % this._keys.length
+  }
+
+  rehash(increase) {
+    let prevKeys = this._keys
+    let prevValues = this._values
+    let curSize = this._keys.length
+
+    this.count = 0
+
+    if(increase) {
+      this._keys = Array(curSize * 2)
+      this._values = Array(curSize * 2)
+    }else {
+      this._keys = Array(curSize / 2)
+      this._values = Array(curSize / 2)
+    }
+
+    for(let i = 0; i < prevKeys.length ; i++){
+      if( i in prevKeys && typeof prevKeys[i] === "string"){
+        let key = prevKeys[i]
+        let val = prevValues[i]
+        this.set(key,val)
+      }
+    }
+  }
+  delete(key) {
+    let idx = this.hash(key)
+
+    for (let i = 0; i < this._keys.length; i++) {
+      var nIdx = (idx + i) % this._keys.length
+      if (nIdx in this._keys) {//该位置是否存储了key
+        if (this._keys[nIdx] === key) {//该key是否是此次要delete的key
+          this._keys[nIdx] = null
+          this._values[nIdx] = null
+          this.count--
+          if (this.count / this._keys.length < this.loadFactor / 3) {
+            this.rehash(false)
+          }
+          break
+        }
+      } else {
+        break
+      }
+    }
+
+    return this
+  }
+  get(key) {
+    let idx = this.hash(key)
+
+    for(let i = 0; i < this._keys.length; i++){
+      let nIdx = (i + idx) / this._keys.length
+      if( nIdx in this._keys){
+        if(this._keys[nIdx] === key){
+          return this._values[nIdx]
+        }
+      }else{
+        return undefined
+      }
+    }
+    return undefined
+  }
+
+  get size() {
+    return this.count
+  }
+  set(key,val){
+    let idx = this.hash(key)
+    for(let i = 0; i < this._keys.length; i++){
+      let nIdx = (idx + i) % this._keys.length
+      if( nIdx in this._keys){
+        if(this._keys[nIdx] === idx){
+          this._values[nIdx] = val
+          break
+        }
+      }else{
+        this._keys[nIdx] = key
+        this._values[nIdx] = val
+        this.count++
+        if(this.count / this._keys.length > this.loadFactor) {
+          this.rehash(true)
+        }
+        break
+      }
+    }
+  }
+  has(key) {
+    let idx = this.hash(key)
+
+    for (let i = 0; i < this._keys.length; i++) {
+      var nIdx = (idx + i) % this._keys.length
+      if (nIdx in this._keys) {
+        if (this._keys[nIdx] === key) {
+          return true
+        }
+      } else {
+        return false
+      }
+    }
+
+    return false
+  }
+}
+</script>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <p>
+    hello
+    <img src="" alt="Cat">
+    <img src="" alt="Hat">
+    <img src="" alt="Rat">
+    <img src="" alt="Bat">
+    world
+  </p>
+  <script>
+    let imgs = document.getElementsByTagName("img")
+    let Aimgs = Array.from(imgs)
+    for(let i = 0; i < Aimgs.length;i++){
+      let img = Aimgs[i]
+      let text = document.createTextNode(img.alt)
+      img.parentNode.replaceChild(text,img)
+    }
+
+
+    function elt(tagName, attrs, ...children) {
+      let node = document.createElement(tagName)
+      if(attrs){
+        for (let key in attrs){
+          let val = attrs[key]
+          node.setAttribute(key,val)
+        }
+      }
+      for(let child of children){
+        if(typeof child === "string"){
+          node.appendChild(document.createTextNode(child))
+        }else{
+          node.appendChild(child)
+        }
+      }
+    }
+//用递归写
+    function ParseJSON(str,start = 1,end = str.length - 1){
+      let res = []
+      while(start < end){
+        if(str[start] !== "{"){
+          let eIdx = str.indexOf(",",start)
+          res.push(Number(str.slice(start,eIdx)))
+          start = eIdx + 1
+        }else{
+          let tep = {}
+          let eIdx = str.indexOf(":",start)
+          let key = str.slice(start+1,eIdx)
+          start
+        }
+      }
+    }
+
+  </script>
+</body>
+</html>

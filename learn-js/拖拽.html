@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="moveable" style="left: 0px; top:0px; background-color: aqua;"></div>
+  <div class="moveable" style="left: 0px; top:0px; background-color: orange;"></div>
+  <div class="moveable" style="left: 0px; top:0px; background-color: pink;"></div>
+
+  <script>
+    let startX //鼠标按下去的起始位置 通过 e.pageX 得到
+    let startY
+    let elStartX  //el.style.left
+    let elStartY
+    let maxZ = 0
+    let el
+    //使用事件代理
+    document.addEventListener("mousedown", (e)=>{
+      if(e.target.matches(".moveable")){
+        el = e.target
+        el.style.zIndex = maxZ++
+        if(e.which == 1){
+          startX = e.pageX
+          startY = e.pageY
+          elStartX = parseFloat(el.style.left)
+          elStartY = parseFloat(el.style.top)
+
+          el.addEventListener("mousemove", moved)
+          e.preventDefault()  //阻止默认事件
+        }
+
+      }
+    })
+
+    function moved(e){
+      if(e.which == 0){
+        removeEventListener("mouseover", moved)
+      }else{
+        let distX = e.pageX - startX
+        let distY = e.pageY - startY
+        let left = elStartX + distX
+        let top = elStartY + distY
+
+        if(left < 50){
+          left = 0
+        }
+        if(top < 50){
+          top = 0
+        }
+        if(left > innerWidth - el.offsetWidth - 50){
+          left = innerWidth - el.offsetWidth
+        }
+        if(top > innerHeight - el.offsetHeight - 50){
+          top = innerHeight - el.offsetHeight
+        }
+
+        el.style.top = top + "px"
+        el.style.left = left + "px"
+      }
+    }
+  </script>
+</body>
+</html>
+
+<style>
+  div{
+    width: 300px;
+    height: 300px;
+    position: absolute;
+  }
+</style>
