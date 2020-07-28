@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather</title>
+
+
+</head>
+<body>
+  <select id="prov"></select>
+  <select id="city"></select>
+
+  <button id="queryWeather">查询天气</button>
+  <div id="weather-infomation">
+
+  </div>
+
+</body>
+
+</html>
+
+<script src="china-city-area-zip.js"></script>
+<script src="lodash.min.js"></script>
+<script>
+  var provSelect = document.querySelector('#prov')
+  var citySelect = document.querySelector('#city')
+  var queryWeatherBtn = document.querySelector('#queryWeather')
+  var weatherInfomation = document.querySelector('#weather-infomation')
+
+  var tpl = `<div>
+    <header>
+      <div class="left">
+        <span><%= data.wendu %></span>
+        <span><%= data.forecast[0].type %></span>
+      </div>
+      <div class="right">
+        <span><%= data.ganmao %></span>
+      </div>
+    </header>
+    <div>
+    </div>
+    <ul>
+      <% data.forecast.slice(1).forEach(it => { %>
+      <li>
+        <span><%= it.date %></span>
+        <span><%= it.type %></span>
+        <span><%= it.low %></span>
+        <span><%= it.high %></span>
+      </li>
+      <% }) %>
+    </ul>
+  </div>`
+
+  var tplFunc = _.template(tpl)
+
+  queryWeatherBtn.onclick = function(e) {
+    var cityName = citySelect.value
+    if (!cityName) return
+    // http://wthrcdn.etouch.cn/weather_mini?city=%E5%8C%97%E4%BA%AC
+    getJSON('http://wthrcdn.etouch.cn/weather_mini?city=' + cityName)
+      .then(info => {
+        console.log(info)
+
+        var htmlCode = tplFunc(info)
+
+        weatherInfomation.innerHTML = htmlCode
+      })
+  }
+
+  function getJSON(url) {
+    return get(url).then(JSON.parse)
+  }
+
+  function get(url) {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest()
+      xhr.open('get', url)
+      xhr.onload = () => {
+        resolve(xhr.responseText)
+      }
+      xhr.send()
+    })
+  }
+
+
+  china_city_area_zip.forEach((prov, idx) => {
+    var option = document.createElement('option')
+    option.textContent = prov.name
+    option.value = idx
+    provSelect.appendChild(option)
+  })
+
+  china_city_area_zip[0].child.forEach((city) => {
+      var option = document.createElement('option')
+      option.textContent = city.name
+      // option.value = prov.id
+      citySelect.appendChild(option)
+    })
+
+  provSelect.onchange = function() {
+    var provIdx = provSelect.value
+    var selectedProv = china_city_area_zip[provIdx]
+
+    citySelect.innerHTML = ''
+
+    selectedProv.child.forEach((city) => {
+      var option = document.createElement('option')
+      option.textContent = city.name
+      // option.value = prov.id
+      citySelect.appendChild(option)
+    })
+  }
+
+</script>
+

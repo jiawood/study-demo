@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <select v-model="selectPro" @change = "changeCity(selectPro)">
+      <option v-for="option in proOptions" v-bind:value="option">
+        {{ option }}
+      </option>
+    </select>
+    <select v-model="selectCity" @change = "changeSelect(selectCity)">
+      <option v-for="option in cityOptions" v-bind:value="option">
+        {{ option }}
+      </option>
+    </select>
+    <button @click = "changeWeather(selectCity)">查询天气</button>
+    <div class="weather-information">
+      <h3>{{selectCity}}</h3>
+      <ul v-for="dayForecast in weatherForecast" >
+        <li>{{dayForecast}}</li>
+      </ul>
+    </div>
+  </div>
+
+
+
+  <script src="vue.js"></script>
+  <script src="china-city-area-zip.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+    var app = new Vue({
+      el:'#app',
+      data: {
+        data:china_city_area_zip,
+        cityOptions:["北京"],
+        selectPro:'北京',
+        selectCity:'北京',
+        weatherForecast:[],
+        bathUrl:'http://wthrcdn.etouch.cn/weather_mini?city='
+      },
+      computed:{
+        proOptions(){
+          let res = []
+          china_city_area_zip.forEach((val) => {
+            res.push(val.name)
+          })
+          return res
+        }
+
+      },
+      methods:{
+        changeCity(selectPro){
+          let proData = this.data.find((value) => {
+            return value.name == selectPro
+          })
+          this.cityOptions = []
+          this.selectCity = '请选择'
+          proData.child.forEach((val) => {
+            this.cityOptions.push(val.name)
+          })
+        },
+        changeSelect(selectCity){
+          this.selectCity = selectCity
+
+        },
+        changeWeather(selectCity){
+          // debugger;
+          if(this.selectCity){
+            this.getJson(this.bathUrl,this.selectCity).then(this.showWeatherForecast)
+
+          }
+
+        },
+        getJson(url,selectCity){
+          return axios.get(url+selectCity)
+        },
+        showWeatherForecast(data){
+          data = data.data.data
+          this.weatherForecast = data.forecast
+        }
+      },
+      mounted:function() {
+        this.getJson(this.bathUrl,this.selectCity).then(this.showWeatherForecast)
+      }
+
+    })
+  </script>
+</body>
+</html>
+<style>
+
+</style>
