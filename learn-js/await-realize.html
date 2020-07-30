@@ -1,0 +1,105 @@
+<script>
+
+  //run函数是对一个生成器函数不断的执行 g.next() 直到函数结束
+  //递归生成生成器
+  function run(generatorFunction){
+    let generator = generatorFunction()
+    let generated = generator.next()
+
+    step()
+
+    function step(){
+
+      if(!generated.done){
+        generated.value.then((val) => {
+          generated = generator.next(val)
+          step()
+        },(reason) =>{
+          generated = generator.throw(reason)
+          step()
+        })
+      }
+    }
+  }
+
+
+  function run2(generatorFunction) {
+
+    return new Promise((resolve, reject) => {
+      var generator = generatorFunction()
+      var generated
+
+      try {
+        generated = generator.next()
+      } catch(e) {
+        reject(e)
+        return
+      }
+
+      step()
+
+      function step() {
+        if (!generated.done) {
+          generated.value.then(val => {
+            try {
+              generated = generator.next(val)
+            } catch(e) {
+              reject(e)
+              return
+            }
+            step()
+          }, reason => {
+            try {
+              generated = generator.throw(reason)
+            } catch(e) {
+              reject(e)
+              return
+            }
+            step()
+          })
+        } else {
+          resolve(generated.value)
+        }
+      }
+    })
+  }
+
+
+  function * f(){
+    let a = yield getValue(5,2000)
+    yield delay(1000)
+    let b = yield getValue(10,3000)
+  }
+
+  var g = f()
+  g.next()
+
+  function delay(duration){
+    return new Promise((resolve) => {
+      setTimeout(resolve,duration)
+    })
+  }
+
+  function getValue(val,duration) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(val)
+      },duration)
+    })
+  }
+
+  function * shit(){
+    yield 2
+    yield 1
+    return
+  }
+  fuck = shit()
+
+
+
+  //当run这个函数实现之后，就可以构造一个生成器函数，然后run(generationFunc),yiled时，接我们的异步函数，这样异步函数会拿到结果之后，再进行后续的计算
+  //可以从形式上和同步函数相同
+  //es7的时候  async-await 封装了这部分功能，使其实现效果与生成器函数+promise的效果相同
+  // async function() {  let data =  awaite getJson('url')}
+  // const a = async () => {}
+</script>
