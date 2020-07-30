@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button class="next">next generation</button>
+  <button class="auto">auto play</button>
+  <div class="container">
+
+  </div>
+  <script>
+    class Conway{
+      constructor(row, col=row){
+        this.row = row
+        this.col = col
+        this.world = this.createNewWorld()  //新world
+        this.init(0)  //初始化world
+      }
+      createNewWorld(){
+        return Array.from(new Array(this.row),() => new Array(this.col))
+      }
+      init(radio = 0.3){
+        for(let i = 0; i < this.row; i++){
+          for(let j = 0; j < this.col; j++){
+            let randomNumber = Math.random()
+            if(randomNumber < radio){
+              this.world[i][j] = 1
+            }else{
+              this.world[i][j] = 0
+            }
+          }
+        }
+      }
+      setCellState(i,j,value = 1){
+        this.world[i][j] = value
+      }
+      countNeighbour(i,j){
+        let count = 0
+
+        for(let m = i-1; m <= i+1; m++){
+          for(let n = j-1; n <= j+1; n++){
+            let m1 = m
+            let n1 = n
+            if(m1 < 0){
+              m1 = m1 + this.col
+            }
+            if(m1 > this.col - 1){
+              m1 -= this.col
+            }
+            if(n1 < 0){
+              n1 = n1 + this.row
+            }
+            if(n1 > this.row - 1){
+              n1 -= this.row
+            }
+            if(this.world[m1][n1]){
+              if(m1 == i && n ==j){
+                continue
+              }
+              count++
+            }
+          }
+        }
+        return count
+      }
+      nextGeneration() {
+        let world = this.createNewWorld()
+        for(let i = 0; i < this.row; i++){
+          for(let j = 0; j < this.col; j++){
+            let count = this.countNeighbour(i,j)
+
+            if(count < 2 || count > 3){
+              world[i][j] = 0
+            }else if(count == 3){
+              // debugger
+              world[i][j] = 1
+            }else{
+              world[i][j] = this.world[i][j]
+            }
+          }
+        }
+        this.world = world
+        return this
+      }
+      renderToHTML(){
+        return this.world.map((row,rowIdx) => {
+          return row.map((val,colIdx) => {
+            return `<input type="checkbox" data-row = ${rowIdx} data-col = ${colIdx} ${val? 'checked' : ''}>`
+          }).join('')
+        }).join('<br>')
+      }
+    }
+
+    let newConway = new Conway(20,20)
+
+    let next = document.querySelector('.next')
+    let auto = document.querySelector('.auto')
+
+    let container = document.querySelector('.container')
+    container.innerHTML = newConway.renderToHTML()
+
+    next.onclick = () => {
+      tick()
+
+    }
+
+    container.addEventListener('click', (e) => {
+      if(e.target.matches('input')){
+        let i = e.target.dataset.row
+        let j = e.target.dataset.col
+        newConway.setCellState(i,j,e.target.checked?1:0)
+      }
+    })
+
+    function tick() {
+      newConway.nextGeneration()
+      container.innerHTML = newConway.renderToHTML()
+    }
+
+    let playing = false
+    let intervalId
+    auto.onclick = () => {
+      if(playing){
+        clearInterval(intervalId)
+        playing = false
+      }else{
+        intervalId = setInterval(() => {
+          tick()
+        }, 200);
+        playing = true
+      }
+    }
+
+  </script>
+</body>
+</html>
+<style>
+
+</style>
