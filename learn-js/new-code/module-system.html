@@ -1,0 +1,35 @@
+<script>
+(function(){
+  function readFile(filename) {
+  var xhr = new XMLHttpRequest()
+  xhr.open('get', filename, false)
+  xhr.send()
+  return xhr.responseText
+}
+
+  require.cache = {}
+  function require(filename) {
+    //如果缓存里面存放了文件，则直接返回
+    if(require.cache.hasOwnProperty(filename)){
+      return require.cache[filename].exports
+    }
+
+    //得到一个字符串，这是通过xhr请求得到的
+    let  fileContent = readFile(filename)
+    //字符串通过new Function之后，转成一个函数，然后调用函数，返回函数return的结果
+    let module = {exports:{}}
+    let modFunc = new Function('require','module','exports',fileContent)
+    modFunc(require,module,module.exports)
+    require.cache[filename] = module
+    return module.exports
+  }
+
+  (function(){
+    // debugger
+    let weekday = require('weekday.js')
+    console.log(weekday.name(0))
+  }())
+}())
+</script>
+
+
