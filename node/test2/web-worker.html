@@ -1,0 +1,29 @@
+<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam blanditiis nostrum, aperiam tempora perferendis esse dolor animi ullam praesentium, nemo nisi iusto accusamus repellat dolorem molestias quasi aliquid, maxime laudantium?</p>
+<script>
+  var worker = new Worker('./worker.js')
+  // var worker2 = new Worker('./worker.js')
+  // var worker3 = new Worker('./worker.js')
+  // var worker4 = new Worker('./worker.js')
+
+
+  // setTimeout(() => {
+  //   for (var i = 0; i < 100; i++) {
+  //     deadLoop(800)
+  //     console.log(2)
+  //   }
+  // }, 10)
+
+
+  // function deadLoop(t) {
+  //   var start = Date.now()
+  //   while(Date.now() - start < t) {
+
+  //   }
+  // }
+  var a = 3
+  worker.postMessage(5)
+
+  worker.addEventListener('message', e => {
+    console.log(e.data)
+  })
+</script>

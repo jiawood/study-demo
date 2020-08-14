@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text"> //hello world
+  <p class="coords">helloa, hellob, helloc, hellod</p>
+
+  <script>
+    var input = document.querySelector('input')
+    var id = null
+
+    input.addEventListener('keypress', function(e) {
+      clearTimeout(id)
+      id = setTimeout(() => {
+        showSuggestion(e)
+      }, 500)
+    })
+
+    function showSuggestion(e) {
+      console.log('show', input.value)
+    }
+
+    function debounce(f, time) {
+      var id = null
+      return function(e) {
+        clearTimeout(id)
+        id = setTimeout(() => {
+          f.call(this, e)
+        }, 500)
+      }
+    }
+
+
+    var coords = document.querySelector('.coords')
+
+    function throttle(f, time) {
+      var latestEvent = null
+      var scheduled = false
+
+      return function(e) {
+        latestEvent = e
+        if (!scheduled) {
+          scheduled = true
+          setTimeout(() => {
+            scheduled = false
+            f.call(this, latestEvent)
+          }, time)
+        }
+      }
+    }
+
+    window.addEventListener(
+      'mousemove',
+
+      throttle(function(e) {
+        coords.textContent = e.pageX + ',' + e.pageY
+      }, 250)
+    )
+
+
+    // window.addEventListener('mousemove', e => {
+    //   if (xxx) {
+    //     console.log(5)
+    //   }
+    //   latestEvent = e
+    //   if (!scheduled) {
+    //     scheduled = true
+    //     setTimeout(() => {
+    //       scheduled = false
+    //       showCoords(latestEvent)
+    //     }, 250)
+    //   }
+    // })
+
+    // function showCoords(event) {
+    //   coords.textContent = event.pageX + ',' + event.pageY
+    // }
+  </script>
+</body>
+</html>

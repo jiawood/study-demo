@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    button.active {
+      background-color: red;
+    }
+    div.tab-item {
+      display: none;
+    }
+    div.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <div data-tabname="aaa">Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore expedita soluta quae reiciendis reprehenderit deleniti provident in eius incidunt tenetur quis, molestias distinctio quia sint voluptatum, voluptates non. Voluptatum, illum.</div>
+    <div data-tabname="bbb">Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur mollitia est, esse amet earum a accusantium fugit, laborum doloremque minima cum voluptatum modi aliquid quod consequuntur voluptas voluptate labore non!</div>
+    <div data-tabname="ccc">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum odit, nostrum quam, veniam est, facere itaque magni sint ex error nisi molestias ratione fugiat laudantium dolorem modi iusto inventore? Molestias?</div>
+  </section>
+
+  <script>
+    class Tabs {
+      constructor(node) {
+        this.node = node
+        this.init()
+      }
+      init() {
+        this.createButtons()
+        this.bindEvents()
+
+      }
+    }
+
+    new Tab(document.querySelector('section'))
+
+
+    function asTabs(node) {
+      var childs = Array.from(node.children)
+      if (childs.length == 0) {
+        retun
+      }
+      for (var i = childs.length - 1; i >= 0; i--) {
+        let child = childs[i]
+        child.classList.add('tab-item')
+        let btn = document.createElement('button')
+        btn.textContent = child.dataset.tabname
+        node.prepend(btn)
+        btn.addEventListener('click', e => {
+          console.log('btn click')
+          // debugger
+          childs.forEach(it => {
+            it.classList.remove('active')
+          })
+          node.querySelector('button.active').classList.remove('active')
+          btn.classList.add('active')
+          child.classList.add('active')
+        })
+      }
+      childs[0].classList.add('active')
+      node.querySelector('button').classList.add('active')
+    }
+
+    asTabs(document.querySelector('section'))
+  </script>
+</body>
+</html>
